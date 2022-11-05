@@ -1,9 +1,16 @@
 import Head from "next/head";
+import { useState } from "react";
 import { BiUserPlus } from "react-icons/bi";
 import Form from "../components/Form";
 import Table from "../components/Table";
 
 export default function Home() {
+  const [visible, setVisible] = useState(false);
+
+  const handler = () => {
+    setVisible(!visible);
+  };
+
   return (
     <section>
       <Head>
@@ -19,7 +26,10 @@ export default function Home() {
 
         <div className="container mx-auto flex justify-between py-5 border-b">
           <div className="left flex gap-3 ">
-            <button className="flex bg-indigo-500 text-white px-4 py-3 border rounded-md hover:bg-gray-50 hover:border-indigo-500 hover:text-indigo-500">
+            <button
+              onClick={handler}
+              className="flex bg-indigo-500 text-white px-4 py-3 border rounded-md hover:bg-gray-50 hover:border-indigo-500 hover:text-indigo-500"
+            >
               Add Employee
               <span className="px-1">
                 <BiUserPlus size={23} />
@@ -27,11 +37,11 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="container mx-auto py-5">
-          <Form />
-        </div>
+
+        {visible ? <Form /> : <></>}
+
         <div className="container mx-auto">
-          <Table/>
+          <Table />
         </div>
       </main>
     </section>
