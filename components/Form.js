@@ -1,5 +1,7 @@
 import { useReducer } from "react";
 import { BiPlus } from "react-icons/bi";
+import Success from "./UI/Success";
+import Error from "./UI/Error";
 const formReducer = (state, event) => {
   return {
     ...state,
@@ -12,9 +14,11 @@ export default function Form() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    if (Object.keys(formData).length == 0) return console.log("esta en vlanco");
     console.log(formData);
   };
 
+  if (Object.keys(formData).length > 0) return <Success message="Date added" />;
   return (
     <form className="grid lg:grid-cols-2 w-4/6 gap-4" onSubmit={handleSubmit}>
       <div className="input-type">
@@ -97,7 +101,9 @@ export default function Form() {
       </div>
       <button className="flex justify-center text-md w-2/6 bg-green-500 text-white px-4 py-2 border rounded-md hover:bg-gray-50 hover:border-green-500 hover:text-green-500">
         Add
-        <span className="px-1"><BiPlus size={23}/></span>
+        <span className="px-1">
+          <BiPlus size={23} />
+        </span>
       </button>
     </form>
   );
