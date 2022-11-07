@@ -1,16 +1,18 @@
 import mongoose from "mongoose";
 
-const MONGO_URL =
+const URL =
   "mongodb+srv://orgrim:orgrim@nextjscrud.wjy2dsw.mongodb.net/?retryWrites=true&w=majority";
 
 const connectMongo = async () => {
   try {
-    const { connection } = await mongoose.connect(MONGO_URL);
+    const { connection } = await mongoose.connect(URL);
+
     if (connection.readyState == 1) {
-      console.log("database connected");
+      console.log("Database Connected");
     }
-  } catch (error) {
-    return Promise.reject(error);
+    console.log(connection);
+  } catch (errors) {
+    return Promise.reject(errors);
   }
 };
 
