@@ -3,14 +3,14 @@ import Users from "../model/user";
 //Cotroller
 
 //get http://localhost:3000/api/users
-export async function getUsers(req, res){
+export async function getUsers(req, res) {
   try {
-      const users = await Users.find({})
+    const users = await Users.find({});
 
-      if(!users) return res.status(404).json( { error: "Data not Found"})
-      res.status(200).send(users)
+    if (!users) return res.status(404).json({ error: "Data not Found" });
+    res.status(200).json(users);
   } catch (error) {
-      res.status(404).json( { error : "Error While Fetching Data"})
+    res.status(404).json({ error: error.message });
   }
 }
 
