@@ -43,3 +43,16 @@ export async function putUser(req, res) {
     res.status(404).json({ error: "Error While Updating the Data...!" });
   }
 }
+
+export async function deleteUser(req, res) {
+  try {
+    const { userId } = req.query;
+    if (userId) {
+      const user = await Users.findByIdAndDelete(userId);
+      return res.status(200).json({ delete: userId });
+    }
+    res.status(404).json({ error: "User Not Selected" });
+  } catch (error) {
+    res.status(404).json({ error: "Error While Deleting user...!" });
+  }
+}
