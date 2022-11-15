@@ -1,5 +1,5 @@
 import connectMongo from "../../../database/conn";
-import { getUsers, postUser } from "../../../database/controller";
+import { getUsers, postUser, putUser } from "../../../database/controller";
 
 export default async function handler(req, res) {
   connectMongo().catch(() =>
@@ -13,6 +13,9 @@ export default async function handler(req, res) {
       break;
     case "POST":
       postUser(req, res);
+      break;
+    case "PUT":
+      putUser(req, res);
       break;
     default:
       res.setHeader("Allow", ["GET", "POST", "PUT"]);
