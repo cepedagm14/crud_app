@@ -10,7 +10,7 @@ export default function EmployeeRow({
   return (
     <tr className="bg-gray-50 text-center">
       <td className="px-16 py-2 flex flex-row items-center">
-        <img src={avatar} alt="" />
+        <img src={avatar} alt="" className="h-8 w-8 rounded-full object-cover " />
         <span className="text-center ml-2 font-semibold">{name}</span>
       </td>
       <td className="px-16 py-2">

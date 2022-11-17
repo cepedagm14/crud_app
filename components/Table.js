@@ -1,7 +1,9 @@
 import EmployeeRow from "./EmployeeRow";
 import data from "../database/data.json";
+import { getUser } from "../lib/helpers";
+
 export default function Table() {
-  console.log(data);
+  console.log(getUser());
   return (
     <table className="min-w-full table-auto">
       <thead>
