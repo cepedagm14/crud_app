@@ -1,9 +1,14 @@
 import EmployeeRow from "./EmployeeRow";
-import data from "../database/data.json";
+// import data from "../database/data.json";
 import { getUser } from "../lib/helpers";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Table() {
-  console.log(getUser());
+  const { isLoading, isError, data, error } = useQuery(["users"], getUser);
+
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Error, {error}</p>;
+  console.log("data", data)
   return (
     <table className="min-w-full table-auto">
       <thead>
@@ -30,7 +35,7 @@ export default function Table() {
       </thead>
       <tbody className="bg-gray-200">
         {data.map((item) => (
-          <EmployeeRow key={item.id} {...item} />
+          <EmployeeRow key={item._id} {...item} />
         ))}
       </tbody>
     </table>
