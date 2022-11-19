@@ -1,14 +1,16 @@
 import Head from "next/head";
-import { useState } from "react";
 import { BiUserPlus } from "react-icons/bi";
 import Form from "../components/Form";
 import Table from "../components/Table";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleChangeAction } from "../redux/reducer";
 
 export default function Home() {
-  const [visible, setVisible] = useState(false);
+  const visible = useSelector((state) => state.app.client.toggleForm);
+  const dispatch = useDispatch();
 
   const handler = () => {
-    setVisible(!visible);
+     dispatch(toggleChangeAction());
   };
 
   return (
