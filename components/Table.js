@@ -1,14 +1,15 @@
 import EmployeeRow from "./EmployeeRow";
-// import data from "../database/data.json";
 import { getUsers } from "../lib/helpers";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 export default function Table() {
+  const state = useSelector((state) => state);
   const { isLoading, isError, data, error } = useQuery(["users"], getUsers);
-
+console.log(state);
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error, {error}</p>;
-  console.log("data", data)
+  console.log("data", data);
   return (
     <table className="min-w-full table-auto">
       <thead>
