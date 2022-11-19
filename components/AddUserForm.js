@@ -1,24 +1,16 @@
-import { useReducer } from "react";
 import { BiPlus } from "react-icons/bi";
 import Success from "./UI/Success";
 import Error from "./UI/Error";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { getUsers, postUser } from "../lib/helpers";
 
-const formReducer = (state, event) => {
-  return {
-    ...state,
-    [event.target.name]: event.target.value,
-  };
-};
 
-export default function AddUserForm() {
+export default function AddUserForm({formData, setFormData}) {
 
-  const queryClient =  useQueryClient()
-  const [formData, setFormData] = useReducer(formReducer, {});
+  const queryClient =  useQueryClient()  
   const addMutation = useMutation(postUser, {
     onSuccess: () => {
-      queryClient.prefetchQuery('users', getUsers)
+      queryClient.prefetchQuery(['users'], getUsers)
       console.log("data inserted");
     },
     onError: () => {

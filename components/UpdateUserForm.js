@@ -1,16 +1,8 @@
-import { useReducer } from "react";
 import { BiBrush } from "react-icons/bi";
 import Success from "./UI/Success";
-import Error from "./UI/Error";
-const formReducer = (state, event) => {
-  return {
-    ...state,
-    [event.target.name]: event.target.value,
-  };
-};
 
-export default function UpdateUserForm() {
-  const [formData, setFormData] = useReducer(formReducer, {});
+export default function UpdateUserForm({ formId, formData, setFormData }) {
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
