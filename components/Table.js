@@ -41,19 +41,16 @@ export default function Table() {
     </table>
   );
 }
-
-function Tr({_id, name, avatar, email, salary, date, status }) {
+function Tr({ _id, name, avatar, email, salary, date, status }) {
   const visible = useSelector((state) => state.app.client.toggleForm);
   const dispatch = useDispatch();
 
   const onUpdate = () => {
     dispatch(toggleChangeAction());
-    if(visible){
-      dispatch(updateAction(_id))
+    if (visible) {
+      dispatch(updateAction(_id));
     }
-    console.log(visible);
   };
-
   return (
     <tr className="bg-gray-50 text-center">
       <td className="px-16 py-2 flex flex-row items-center">

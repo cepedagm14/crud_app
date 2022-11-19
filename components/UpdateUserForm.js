@@ -1,8 +1,16 @@
+import { useQuery } from "@tanstack/react-query";
 import { BiBrush } from "react-icons/bi";
+import { getUser } from "../lib/helpers";
+import Error from "./UI/Error";
 import Success from "./UI/Success";
 
 export default function UpdateUserForm({ formId, formData, setFormData }) {
+  const { isLoading, isError, data, error } = useQuery(["users", formId], () =>
+    getUser(formId)
+  );
 
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <Error message={error.message} />;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -10,12 +18,14 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
     console.log(formData);
   };
 
-  if (Object.keys(formData).length > 0) return <Success message="Date added" />;
+  const { name, avatar, salary, date, email, status } = data;
+  const [firtsname, lastsname] = name ? name.split(" ") : formData;
   return (
     <form className="grid lg:grid-cols-2 w-4/6 gap-4" onSubmit={handleSubmit}>
       <div className="input-type">
         <input
           onChange={setFormData}
+          defaultValue={firtsname}
           type="text"
           name="firtsname"
           placeholder="FirstName"
@@ -25,6 +35,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
       <div className="input-type">
         <input
           onChange={setFormData}
+          defaultValue={lastsname}
           type="text"
           name="lastsname"
           placeholder="LastName"
@@ -34,6 +45,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
       <div className="input-type">
         <input
           onChange={setFormData}
+          defaultValue={email}
           type="text"
           name="email"
           placeholder="Email"
@@ -43,6 +55,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
       <div className="input-type">
         <input
           onChange={setFormData}
+          defaultValue={salary}
           type="text"
           name="salary"
           placeholder="Salary"
@@ -53,6 +66,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
       <div className="input-type">
         <input
           onChange={setFormData}
+          defaultValue={data}
           type="date"
           name="date"
           placeholder="Date"
@@ -64,6 +78,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
         <div className="form-check">
           <input
             onChange={setFormData}
+            defaultChecked={status == "active"}
             type="radio"
             value="Active"
             id="radioDefault1"
@@ -77,6 +92,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
         <div className="form-check">
           <input
             onChange={setFormData}
+            defaultChecked={status !== "active"}
             type="radio"
             value="inactive"
             id="radioDefault2"
