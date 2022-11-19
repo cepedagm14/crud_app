@@ -2,6 +2,9 @@ import { useReducer } from "react";
 import { BiPlus } from "react-icons/bi";
 import Success from "./UI/Success";
 import Error from "./UI/Error";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { getUsers, postUser } from "../lib/helpers";
+
 const formReducer = (state, event) => {
   return {
     ...state,
@@ -10,15 +13,41 @@ const formReducer = (state, event) => {
 };
 
 export default function AddUserForm() {
+
+  const queryClient =  useQueryClient()
   const [formData, setFormData] = useReducer(formReducer, {});
+  const addMutation = useMutation(postUser, {
+    onSuccess: () => {
+      queryClient.prefetchQuery('users', getUsers)
+      console.log("data inserted");
+    },
+    onError: () => {
+      console.log("error... data no inserted");
+    },
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
     if (Object.keys(formData).length == 0) return console.log("esta en vlanco");
-    console.log(formData);
+
+    let { firtsname, lastsname, email, salary, date, status } = formData;
+    const model = {
+      name: `${firtsname} ${lastsname}`,
+      avatar: `https://randomuser.me/api/portraits/men/${Math.floor(
+        Math.random() * 10
+      )}.jpg`,
+      email,
+      salary,
+      date,
+      status: status ?? "active",
+    };
+
+    addMutation.mutate(model);
   };
 
-  if (Object.keys(formData).length > 0) return <Success message="Date added" />;
+  if (addMutation.isLoading) return <div>Loading!</div>;
+  if (addMutation.isError) return <Error message={addMutation.error.message} />;
+  if(addMutation.isSuccess) return <Success message="Added Successful" />
   return (
     <form className="grid lg:grid-cols-2 w-4/6 gap-4" onSubmit={handleSubmit}>
       <div className="input-type">
@@ -73,7 +102,7 @@ export default function AddUserForm() {
           <input
             onChange={setFormData}
             type="radio"
-            value="Active"
+            value="active"
             id="radioDefault1"
             name="status"
             className="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-green-500 checked:border-green-500 focus:outline-none transiion duration-200 mt-1 aling-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
@@ -108,4 +137,3 @@ export default function AddUserForm() {
     </form>
   );
 }
-
