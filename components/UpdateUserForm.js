@@ -1,21 +1,38 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BiBrush } from "react-icons/bi";
-import { getUser } from "../lib/helpers";
+import { getUser, getUsers, updateUser } from "../lib/helpers";
 import Error from "./UI/Error";
 import Success from "./UI/Success";
 
 export default function UpdateUserForm({ formId, formData, setFormData }) {
+
+  const queryclient = useQueryClient()
   const { isLoading, isError, data, error } = useQuery(["users", formId], () =>
     getUser(formId)
   );
 
+  const UpdateMutation = useMutation((newData) => updateUser(formId, newData), {
+    onSuccess: async (data) => {
+      console.log("update successfull");
+      // queryclient.setQueryData(['users'], (old)=> [data]  )
+      queryclient.prefetchQuery(["users"], getUsers)
+    },
+    onError: () => {
+      console.log("update failed");
+    },
+  });
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <Error message={error.message} />;
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (Object.keys(formData).length == 0) return console.log("esta en vlanco");
-    console.log(formData);
+    let userName = `${formData.firtsname ?? firtsname} ${
+      formData.lastsname ?? lastsname
+    }`;
+    let updated = Object.assign({}, data, formData, { name: userName });
+
+    await UpdateMutation.mutate(updated);
   };
 
   const { name, avatar, salary, date, email, status } = data;
@@ -66,7 +83,7 @@ export default function UpdateUserForm({ formId, formData, setFormData }) {
       <div className="input-type">
         <input
           onChange={setFormData}
-          defaultValue={data}
+          defaultValue={date}
           type="date"
           name="date"
           placeholder="Date"
