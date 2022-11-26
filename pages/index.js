@@ -1,16 +1,33 @@
 import Head from "next/head";
-import { BiUserPlus } from "react-icons/bi";
+import { BiCheck, BiUserPlus, BiX } from "react-icons/bi";
 import Form from "../components/Form";
 import Table from "../components/Table";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleChangeAction } from "../redux/reducer";
+import { toggleChangeAction, deleteAction } from "../redux/reducer";
+import { deleteUser, getUsers } from "../lib/helpers";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Home() {
   const visible = useSelector((state) => state.app.client.toggleForm);
+  const deleteId = useSelector((state) => state.app.client.deleteId);
+  const queryClient = useQueryClient();
+
   const dispatch = useDispatch();
 
   const handler = () => {
-     dispatch(toggleChangeAction());
+    dispatch(toggleChangeAction());
+  };
+  const cancelHandler = async () => {
+    console.log("canceled")
+    await dispatch(deleteAction(null))
+  };
+
+  const deleteHandler = async () => {
+    if (deleteId) {
+      await deleteUser(deleteId);
+      await queryClient.prefetchQuery(["users"], getUsers);
+      await dispatch(deleteAction(null))
+    }
   };
 
   return (
@@ -38,6 +55,7 @@ export default function Home() {
               </span>
             </button>
           </div>
+          {deleteId ?  DeleteComponent({ deleteHandler, cancelHandler }) : <></>}
         </div>
 
         {visible ? <Form /> : <></>}
@@ -47,5 +65,33 @@ export default function Home() {
         </div>
       </main>
     </section>
+  );
+}
+
+function DeleteComponent({ deleteHandler, cancelHandler }) {
+  return (
+    <div className="flex gap-5">
+      <button>Are you sure?</button>
+      <button
+        onClick={deleteHandler}
+        className="flex bg-red-500 text-white px-5 py-2 border rounded-md hover:bg-red-400 hover:border-red-600 hover:text-gray-500"
+      >
+        Yes{" "}
+        <span className="px-1">
+          {" "}
+          <BiX color="rgb(255 255 255)" size={25} />{" "}
+        </span>
+      </button>
+      <button
+        onClick={cancelHandler}
+        className="flex bg-blue-500 text-white px-5 py-2 border rounded-md hover:bg-blue-400 hover:border-blue-600 hover:text-gray-500"
+      >
+        No{" "}
+        <span className="px-1">
+          {" "}
+          <BiCheck color="rgb(255 255 255)" size={25} />{" "}
+        </span>{" "}
+      </button>
+    </div>
   );
 }
